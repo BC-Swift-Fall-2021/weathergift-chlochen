@@ -8,7 +8,6 @@
 import UIKit
 
 class LocationDetailViewController: UIViewController {
-
     
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var placeLabel: UILabel!
@@ -18,7 +17,7 @@ class LocationDetailViewController: UIViewController {
     @IBOutlet weak var pageControl: UIPageControl!
     @IBOutlet weak var imageView: UIImageView!
     
-    var weatherLocation: WeatherLocation!
+    var weatherDetail: WeatherDetail!
     var locationIndex = 0
     
     override func viewDidLoad() {
@@ -30,17 +29,20 @@ class LocationDetailViewController: UIViewController {
     
     func updateUserInterface() {
         let pageViewController = UIApplication.shared.windows.first!.rootViewController as! PageViewController
-        weatherLocation = pageViewController.weatherLocations[locationIndex]
-        
-        dateLabel.text = ""
-        placeLabel.text = weatherLocation.name
-        temperatureLabel.text = "--°"
-        summaryLabel.text = ""
+        let weatherLocation = pageViewController.weatherLocations[locationIndex]
+        weatherDetail = WeatherDetail(name: weatherLocation.name, latitude = weatherLocation.latitude, longitude = weatherLocation.longitude)
         
         pageControl.numberOfPages = pageViewController.weatherLocations.count
         pageControl.currentPage = locationIndex
         
-        weatherLocation.getData()
+        weatherDetail.getData {
+            DispatchQueue.main.async {
+                self.dateLabel.text = self.weatherDetail.timezone
+                self.placeLabel.text = self.weatherDetail.name
+                self.temperatureLabel.text = "\(self.weatherDetail.temperature)°"
+                self.summaryLabel.text = "\(self.weatherDetail.summary)"
+            }
+        }
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
