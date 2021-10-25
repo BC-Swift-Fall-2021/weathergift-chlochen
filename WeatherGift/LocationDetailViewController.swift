@@ -7,14 +7,16 @@
 
 import UIKit
 
+private let dateFormatter: DateFormatter = {
+    print("I just created a date formatter!")
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "EEEE, MMM d, h:mm aaa"
+    return dateFormatter
+}()
+
+
 class LocationDetailViewController: UIViewController {
     
-    private let dateFormatter: DateFormatter = {
-        print("I just created a date formatter!")
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "EEEE, MMM d, h:mm aaa"
-        return dateFormatter
-    }()
     
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var placeLabel: UILabel!
@@ -37,7 +39,7 @@ class LocationDetailViewController: UIViewController {
     func updateUserInterface() {
         let pageViewController = UIApplication.shared.windows.first!.rootViewController as! PageViewController
         let weatherLocation = pageViewController.weatherLocations[locationIndex]
-        weatherDetail = WeatherDetail(name: weatherLocation.name, latitude = weatherLocation.latitude, longitude = weatherLocation.longitude)
+        weatherDetail = WeatherDetail(name: weatherLocation.name, latitude: weatherLocation.latitude, longitude: weatherLocation.longitude)
         
         pageControl.numberOfPages = pageViewController.weatherLocations.count
         pageControl.currentPage = locationIndex
